@@ -52,11 +52,11 @@ while running:
     
     head_rect = pygame.Rect(snake_x, snake_y, snake_width, snake_width)
     fruit_rect = pygame.Rect(fruit_x, fruit_y, snake_width, snake_width)
+    if head_rect.colliderect(fruit_rect):
+        snake_length += 1
+        fruit_x = random.randint(0, screen_width)
+        fruit_y = random.randint(0, screen_width)
     for pos in snake_body:
-        if head_rect.colliderect(fruit_rect):
-            snake_length += 1
-            fruit_x = random.randint(0, screen_width)
-            fruit_y = random.randint(0, screen_width)
         px, py = pos
         pygame.draw.rect(screen, "red", (px, py, snake_width, snake_width))
     
