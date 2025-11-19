@@ -1,8 +1,10 @@
 import pygame
 import random
 
-if __name__ == "__main__":
+def snake_game():
+    game_over = False
     pygame.init()
+    font = pygame.font.SysFont(None, 60)
 
     screen_width = 600
     screen_height = 600
@@ -27,10 +29,28 @@ if __name__ == "__main__":
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False 
-        
+
+        if game_over:
+            screen.fill("black")
+            msg = font.render("YOU LOST!", True, (255, 0, 0))
+            screen.blit(msg, (screen_width//2 - msg.get_width()//2,
+                              screen_height//2 - msg.get_height()//2))
+            pygame.display.flip()
+            continue
+        #Refresh the page
         screen.fill("black")
-        # snake_length += snake_vel
-        
+
+        #Out of screen
+        if snake_x>=screen_width:
+            snake_x -= screen_width
+        if snake_x<=0:
+            snake_x +=screen_width
+        if snake_y<=0:
+            snake_y += screen_height
+        if snake_y>=screen_height:
+            snake_y -= screen_height
+
+#Keyboard input
         keys = pygame.key.get_pressed()
         if keys[pygame.K_UP]:
             snake_vel_y = -snake_vel
@@ -45,9 +65,19 @@ if __name__ == "__main__":
             snake_vel_x = -snake_vel
             snake_vel_y = 0
 
+
+#update the postion of the snake's head
         snake_x += snake_vel_x
         snake_y += snake_vel_y
 
+        #end the game
+        if (snake_x, snake_y) in snake_body:
+            game_over = True
+            pygame.display.set_caption("You lost :(")
+            screen.fill("black")
+            continue
+
+        #increase length after moving and delete the previous last part of the tail
         snake_body.append((snake_x, snake_y))
         if len(snake_body) > snake_length:
             del snake_body[0]
@@ -67,3 +97,6 @@ if __name__ == "__main__":
         pygame.display.flip()
 
         clock.tick(60)
+
+if __name__ == "__main__":
+    snake_game()
